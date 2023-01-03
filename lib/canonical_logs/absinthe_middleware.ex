@@ -18,10 +18,11 @@ defmodule CanonicalLogs.AbsintheMiddleware do
         _ -> "#NULL"
       end
 
-    Logger.metadata(
-      graphql_operation_name: graphql_operation_name,
-      graphql_arguments: filter_arguments(resolution.arguments)
-    )
+    Logger.metadata(graphql_operation_name: graphql_operation_name)
+
+    if resolution.arguments != %{} do
+      Logger.metadata(graphql_arguments: resolution.arguments)
+    end
 
     resolution
   end

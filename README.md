@@ -39,6 +39,15 @@ In your `application.ex`, add the following to the top of your `start/2` functio
   CanonicalLogs.attach()
 ```
 
+or
+
+```elixir
+  CanonicalLogs.attach(
+    conn_metadata: [:request_path, :method, :status, :params]
+    filter_metadata_recursively: []
+  )
+```
+
 Canonical Logs is built off of `Plug.Telemetry` events. If you use Phoenix, you'll find it called in your `<APP_NAME>Web.Endpoint` module.
 
 Wherever the plug is used, modify the line to add the option `log: false`, like so:
@@ -62,19 +71,16 @@ To use it, define or update your schema's `middleware/3` function to include the
   end
 ```
 
-Additionally, it would make sense to add `exclude: ["params"]` to your configuration.
+Additionally, it would make sense to update the `:conn_metadata` configuration to not include `:params`.
 
-## Configuration
-
-Available options, with their defaults:
-```elixir
-  config :canonical_logs,
-    conn_metadata: [:request_path, :method, :status, :params]
-    absinthe_metadata: [:graphql_operation_name, :arguments],
-    filter_metadata_recursively: []
-```
+### Configuration
 
 * `:conn_metadata`: Metadata to be pulled from the [`Plug.Conn`](https://hexdocs.pm/plug/Plug.Conn.html) during a `Plug.Telemetry` `:stop` event.
-* `:absinthe_metadata`: Metadata to be pulled from the `Absinthe.Resolution` during the middleware call. Some special metadata is made available as well:
-  * `:graphql_operation_name`: The top-level operation name of the GraphQL call. Defaults to "#NULL" if not found.
 * `filter_metadata_recursively`: Metadata that if if the key includes this string at any depth will have its value replaced with `"[FILTERED]"`.
+
+## Todo
+
+- [ ] Use `Application.get_env/3`-based config, like what's often used in `config/config.exs` and `config/test.exs`, which would be merged with(and overridden by) anything passed to `CanonicalLogs.attach/1`.
+- [ ] Add `:absinthe_metadata` config option:
+  * `:absinthe_metadata`: Metadata to be pulled from the `Absinthe.Resolution` during the middleware call. Some special metadata is made available as well:
+    * `:graphql_operation_name`: The top-level operation name of the GraphQL call. Defaults to "#NULL" if not found.
