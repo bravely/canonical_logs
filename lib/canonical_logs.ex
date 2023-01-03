@@ -53,32 +53,26 @@ defmodule CanonicalLogs do
         %{conn: conn} = event_metadata,
         options
       ) do
-    log_metadata =
-      %{duration: System.convert_time_unit(duration, :native, :millisecond)}
-      |> Map.merge(
-        get_conn_metadata(
-          event_metadata.conn,
-          Keyword.get(options, :conn_metadata, [:request_path, :method, :status, :params])
-        )
+    %{duration: System.convert_time_unit(duration, :native, :millisecond)}
+    |> Map.merge(
+      get_conn_metadata(
+        event_metadata.conn,
+        Keyword.get(options, :conn_metadata, [:request_path, :method, :status, :params])
       )
-      |> Map.merge(get_logger_metadata())
-      |> filter_metadata(Keyword.fetch!(options, :filter_metadata_recursively))
+    )
+    |> Map.merge(Logger.metadata() |> Enum.into(%{}))
+    |> filter_metadata(Keyword.fetch!(options, :filter_metadata_recursively))
+    |> Logger.metadata()
 
-    Logger.info([conn.method, ?\s, conn.request_path], log_metadata)
+    Logger.info([conn.method, ?\s, conn.request_path])
   end
 
   defp get_conn_metadata(%Plug.Conn{} = conn, retrieveFields) do
     metadata =
       conn
       |> Map.take(retrieveFields)
-      |> Map.new(fn {key, value} -> {to_string(key), value} end)
 
     metadata
-  end
-
-  defp get_logger_metadata do
-    Logger.metadata()
-    |> Map.new(fn {key, value} -> {to_string(key), value} end)
   end
 
   @doc """

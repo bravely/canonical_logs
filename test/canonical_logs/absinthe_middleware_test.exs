@@ -14,7 +14,6 @@ defmodule CanonicalLogs.AbsintheMiddlewareTest do
     end)
   end
 
-  @tag :focus
   test "logs the expected information for a GraphQL request by default" do
     CanonicalLogs.attach(
       filter_metadata_recursively: ["password"],
@@ -51,5 +50,18 @@ defmodule CanonicalLogs.AbsintheMiddlewareTest do
     assert logs =~ "password=[FILTERED]"
     assert logs =~ "password_confirmation=[FILTERED]"
     refute logs =~ "variables="
+
+    [
+      ~r/request_id=/,
+      ~r/duration=/,
+      ~r/status=/,
+      ~r/method=/,
+      ~r/request_path=/,
+      ~r/graphql_operation_name/
+    ]
+    |> Enum.each(fn regex ->
+      matches = Regex.scan(regex, logs)
+      assert length(matches) == 1
+    end)
   end
 end

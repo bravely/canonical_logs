@@ -3,6 +3,7 @@ defmodule CanonicalLogs.AbsintheMiddleware do
     Absinthe middleware to add the graphql operation name and arguments to Logger metadata.
   """
   @behaviour Absinthe.Middleware
+  require Logger
 
   alias Absinthe.Blueprint.Document.Operation
 
