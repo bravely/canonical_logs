@@ -13,18 +13,16 @@ defmodule CanonicalLogs.AbsintheMiddleware do
   It will still use Absinthe's `:filter_variables` [config option](https://hexdocs.pm/absinthe/Absinthe.Logger.html#module-variable-filtering), but additionally uses it recursively.
   """
   def call(resolution, _opts) do
-    if is_nil(Logger.metadata()[:graphql_operation_name]) do
-      graphql_operation_name =
-        case Enum.find(resolution.path, &current_operation?/1) do
-          %Operation{name: name} when not is_nil(name) -> name
-          _ -> "#NULL"
-        end
-
-      Logger.metadata(graphql_operation_name: graphql_operation_name)
-
-      if resolution.arguments != %{} do
-        Logger.metadata(graphql_arguments: resolution.arguments)
+    graphql_operation_name =
+      case Enum.find(resolution.path, &current_operation?/1) do
+        %Operation{name: name} when not is_nil(name) -> name
+        _ -> "#NULL"
       end
+
+    Logger.metadata(graphql_operation_name: graphql_operation_name)
+
+    if resolution.arguments != %{} do
+      Logger.metadata(graphql_arguments: resolution.arguments)
     end
 
     resolution

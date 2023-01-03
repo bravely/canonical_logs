@@ -25,10 +25,6 @@ defmodule CanonicalLogs.Support.TestSchema do
   end
 
   def middleware(middleware, _, _) do
-    if Enum.member?(middleware, CanonicalLogs.AbsintheMiddleware) do
-      middleware
-    else
-      middleware ++ [CanonicalLogs.AbsintheMiddleware]
-    end
+    middleware ++ [CanonicalLogs.AbsintheMiddleware]
   end
 end
