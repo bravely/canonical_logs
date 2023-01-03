@@ -58,7 +58,7 @@ defmodule CanonicalLogs.Support.RecursiveFormatter do
   defp format_value(value) do
     to_string(value)
   rescue
-    error -> nil
+    _error -> nil
   end
 
   defp lpad(num, length \\ 2) do
