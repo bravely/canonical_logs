@@ -14,8 +14,12 @@ defmodule CanonicalLogs.AbsintheMiddlewareTest do
     end)
   end
 
+  @tag :focus
   test "logs the expected information for a GraphQL request by default" do
-    CanonicalLogs.attach(filter_metadata_recursively: ["password"])
+    CanonicalLogs.attach(
+      filter_metadata_recursively: ["password"],
+      conn_metadata: [:request_path, :method, :status]
+    )
 
     logs =
       capture_log(fn ->
@@ -40,7 +44,6 @@ defmodule CanonicalLogs.AbsintheMiddlewareTest do
             }
           })
           |> TestRouter.call(@opts)
-          |> IO.inspect(label: "conn")
       end)
 
     assert logs =~ "[info] GET /graphql"

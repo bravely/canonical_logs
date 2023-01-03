@@ -73,13 +73,7 @@ defmodule CanonicalLogs do
       |> Map.take(retrieveFields)
       |> Map.new(fn {key, value} -> {to_string(key), value} end)
 
-    if Map.get(metadata, :graphql_operation_name) do
-      # Strip out the Absinthe metadata from the conn metadata.
-      metadata
-      |> Map.update(:params, %{}, &Map.drop(&1, [:variables]))
-    else
-      metadata
-    end
+    metadata
   end
 
   defp get_logger_metadata do
