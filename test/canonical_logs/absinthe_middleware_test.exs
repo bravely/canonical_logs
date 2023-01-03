@@ -14,7 +14,6 @@ defmodule CanonicalLogs.AbsintheMiddlewareTest do
     end)
   end
 
-  @tag :focus
   test "logs the expected information for a GraphQL request by default" do
     CanonicalLogs.attach(
       filter_metadata_recursively: ["password"],
