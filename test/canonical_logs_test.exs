@@ -28,6 +28,19 @@ defmodule CanonicalLogsTest do
     assert logs =~ "request_path=/hello"
     assert logs =~ "method=GET"
     assert logs =~ ~r/duration=\d/
+
+    [
+      ~r/request_id=/,
+      ~r/duration=/,
+      ~r/status=/,
+      ~r/method=/,
+      ~r/request_path=/,
+      ~r/params=/
+    ]
+    |> Enum.each(fn regex ->
+      matches = Regex.scan(regex, logs)
+      assert length(matches) == 1
+    end)
   end
 
   test "logs the configured conn_metadata" do

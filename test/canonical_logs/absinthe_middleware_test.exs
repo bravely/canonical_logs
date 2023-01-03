@@ -51,5 +51,18 @@ defmodule CanonicalLogs.AbsintheMiddlewareTest do
     assert logs =~ "password=[FILTERED]"
     assert logs =~ "password_confirmation=[FILTERED]"
     refute logs =~ "variables="
+
+    [
+      ~r/request_id=/,
+      ~r/duration=/,
+      ~r/status=/,
+      ~r/method=/,
+      ~r/request_path=/,
+      ~r/graphql_operation_name/
+    ]
+    |> Enum.each(fn regex ->
+      matches = Regex.scan(regex, logs)
+      assert length(matches) == 1
+    end)
   end
 end
