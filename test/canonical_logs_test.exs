@@ -1,5 +1,5 @@
 defmodule CanonicalLogsTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case
   use Plug.Test
   import ExUnit.CaptureLog
   doctest CanonicalLogs
@@ -43,7 +43,6 @@ defmodule CanonicalLogsTest do
     assert logs =~ "scheme=http"
   end
 
-  @tag :focus
   test "filters metadata keys recursively" do
     CanonicalLogs.attach(
       conn_metadata: [:params],

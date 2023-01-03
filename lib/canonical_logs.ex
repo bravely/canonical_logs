@@ -58,7 +58,7 @@ defmodule CanonicalLogs do
       |> Map.merge(
         get_conn_metadata(
           event_metadata.conn,
-          Keyword.get(options, :conn_metadata, [:request_path, :method, :status])
+          Keyword.get(options, :conn_metadata, [:request_path, :method, :status, :params])
         )
       )
       |> Map.merge(get_logger_metadata())
@@ -68,9 +68,18 @@ defmodule CanonicalLogs do
   end
 
   defp get_conn_metadata(%Plug.Conn{} = conn, retrieveFields) do
-    conn
-    |> Map.take(retrieveFields)
-    |> Map.new(fn {key, value} -> {to_string(key), value} end)
+    metadata =
+      conn
+      |> Map.take(retrieveFields)
+      |> Map.new(fn {key, value} -> {to_string(key), value} end)
+
+    if Map.get(metadata, :graphql_operation_name) do
+      # Strip out the Absinthe metadata from the conn metadata.
+      metadata
+      |> Map.update(:params, %{}, &Map.drop(&1, [:variables]))
+    else
+      metadata
+    end
   end
 
   defp get_logger_metadata do

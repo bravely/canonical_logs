@@ -36,6 +36,8 @@ defmodule CanonicalLogs.MixProject do
       {:plug, "~> 1.11"},
       {:telemetry, "~> 1.0"},
       {:absinthe, "~> 1.6.3", optional: true},
+      {:absinthe_plug, "~> 1.5", only: [:dev, :test]},
+      {:jason, "~> 1.4", only: [:dev, :test]},
       {:ex_doc, "~> 0.29", only: :dev, runtime: false}
     ]
   end
