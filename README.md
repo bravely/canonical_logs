@@ -60,15 +60,10 @@ That's it! There's configuration options and more in [the docs](https://hexdocs.
 
 ### Absinthe
 
-An Absinthe Middleware is included to allow providing the GraphQL operation name and accepted arguments as metadata, while recursively filtering variables by your Absinthe `:filter_variables` [config option](https://hexdocs.pm/absinthe/Absinthe.Logger.html#module-variable-filtering).
-
-To use it, define or update your schema's `middleware/3` function to include the middleware:
+`CanonicalLogs.Absinthe` is included to allow providing the GraphQL operation name and variables as metadata. Just after `CanonicalLogs.attach/1`, add:
 
 ```elixir
-# lib/app_web/schema.ex
-  def middleware(middleware, _field, _object) do
-    middleware ++ [CanonicalLogs.AbsintheMiddleware]
-  end
+  CanonicalLogs.Absinthe.attach()
 ```
 
 Additionally, it would make sense to update the `:conn_metadata` configuration to not include `:params`.
@@ -82,5 +77,5 @@ Additionally, it would make sense to update the `:conn_metadata` configuration t
 
 - [ ] Use `Application.get_env/3`-based config, like what's often used in `config/config.exs` and `config/test.exs`, which would be merged with(and overridden by) anything passed to `CanonicalLogs.attach/1`.
 - [ ] Add `:absinthe_metadata` config option:
-  * `:absinthe_metadata`: Metadata to be pulled from the `Absinthe.Resolution` during the middleware call. Some special metadata is made available as well:
+  * `:absinthe_metadata`: Metadata to be pulled from the `Absinthe.Blueprint` during the `[:absinthe, :execute, :operation, :stop]` call. Some special metadata is made available as well:
     * `:graphql_operation_name`: The top-level operation name of the GraphQL call. Defaults to "#NULL" if not found.
