@@ -12,11 +12,17 @@ defmodule CanonicalLogs.MixProject do
 
       # Docs
       name: "Canonical Logs",
+      description:
+        "Consolidates your Plug/Phoenix/Absinthe request logs into a single log line with all of their relevant information for easier querying.",
       source_url: "https://github.com/bravely/canonical_logs",
       homepage_url: "https://github.com/bravely/canonical_logs",
       main: "README",
       aliases: aliases(),
-      preferred_cli_env: ["test.ci": :test]
+      preferred_cli_env: ["test.ci": :test],
+      package: [
+        licenses: ["MIT"],
+        links: %{"GitHub" => "https://github.com/bravely/canonical_logs"}
+      ]
     ]
   end
 
