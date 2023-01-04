@@ -23,8 +23,4 @@ defmodule CanonicalLogs.Support.TestSchema do
       end)
     end
   end
-
-  def middleware(middleware, _, _) do
-    middleware ++ [CanonicalLogs.AbsintheMiddleware]
-  end
 end
