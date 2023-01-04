@@ -14,7 +14,9 @@ defmodule CanonicalLogs.MixProject do
       name: "Canonical Logs",
       source_url: "https://github.com/bravely/canonical_logs",
       homepage_url: "https://github.com/bravely/canonical_logs",
-      main: "README"
+      main: "README",
+      aliases: aliases(),
+      preferred_cli_env: ["test.ci": :test]
     ]
   end
 
@@ -39,6 +41,12 @@ defmodule CanonicalLogs.MixProject do
       {:absinthe_plug, "~> 1.5", only: [:dev, :test]},
       {:jason, "~> 1.4", only: [:dev, :test]},
       {:ex_doc, "~> 0.29", only: :dev, runtime: false}
+    ]
+  end
+
+  defp aliases do
+    [
+      "test.ci": ["test --color --max-cases=10"]
     ]
   end
 end

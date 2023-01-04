@@ -1,8 +1,8 @@
-defmodule CanonicalLogs.AbsintheMiddlewareTest do
+defmodule CanonicalLogs.AbsintheTest do
   use ExUnit.Case
   use Plug.Test
   import ExUnit.CaptureLog
-  doctest CanonicalLogs.AbsintheMiddleware
+  doctest CanonicalLogs.Absinthe
 
   alias CanonicalLogs.Support.TestRouter
 
@@ -19,6 +19,8 @@ defmodule CanonicalLogs.AbsintheMiddlewareTest do
       filter_metadata_recursively: ["password"],
       conn_metadata: [:request_path, :method, :status]
     )
+
+    CanonicalLogs.Absinthe.attach()
 
     logs =
       capture_log(fn ->
@@ -49,7 +51,7 @@ defmodule CanonicalLogs.AbsintheMiddlewareTest do
     assert logs =~ "email=test@example.com"
     assert logs =~ "password=[FILTERED]"
     assert logs =~ "password_confirmation=[FILTERED]"
-    refute logs =~ "variables="
+    assert logs =~ "graphql_variables="
 
     [
       ~r/request_id=/,
